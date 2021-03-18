@@ -23,3 +23,13 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test AnimalAdoption.Web.Portal.UnitTests\\AnimalAdoption.Web.Portal.UnitTests.csproj --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish --no-build
+
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2.2.2
+      with:
+    # Artifact name
+        name: animal-adoption-portal
+        path: 
+          /home/runner/work/animal-adoption-portal/animal-adoption-portal/AnimalAdoption.Web.Portal/bin/Debug/netcoreapp3.1/publish/
