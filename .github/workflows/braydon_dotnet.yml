@@ -95,7 +95,7 @@ jobs:
       uses: Azure/get-keyvault-secrets@v1
       with:
         # Name of the azure key vault
-        keyvault: AnimalName
+        keyvault: animal-vault-default
         # Name of the secret to be fetched
         secrets: GlobalPassword
         
