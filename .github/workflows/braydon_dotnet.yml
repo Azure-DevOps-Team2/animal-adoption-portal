@@ -44,7 +44,15 @@ jobs:
         name: animal-adoption-portal
         path: 
           /home/runner/work/animal-adoption-portal/animal-adoption-portal/AnimalAdoption.Web.Portal/bin/Debug/netcoreapp3.1/publish/
- # Set these variables at either the step or workflow level
+          
+    - name: Upload a ARM template
+      uses: actions/upload-artifact@v2.2.2
+      with:
+    # Artifact name
+        name: ARM-template
+        path: 
+          ARM Temaplate.json
+  # Set these variables at either the step or workflow level
  
   release:
     if: github.ref == 'refs/heads/master'
@@ -60,6 +68,15 @@ jobs:
         name: animal-adoption-portal
         # Destination path
         # path: # optional
+        
+    - name: Download ARM template
+      uses: actions/download-artifact@v2.0.8
+      with:
+        # Artifact name
+        name: ARM-template
+        # Destination path
+        # path: # optional
+        
     - uses: azure/login@v1
       with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -90,8 +107,26 @@ jobs:
         # Name of an existing slot other than the production slot. Default value is production
         app-settings-json: '[ { "name": "GlobalPassword", "value": "${{env.GlobalPassword}}", "slotSetting": true } ]'
         
-
-    
-        
-
+    - name: Deploy Azure Resource Manager (ARM) Template
+      uses: Azure/arm-deploy@v1
+      with:
+        # Provide the scope of the deployment. Valid values are: 'resourcegroup', 'managementgroup', 'subscription'
+        scope: resourcegroup
+        region: southeastasia
+        # Provide the name of a resource group, only required for resource Group deployments.
+        resourceGroupName: DevOps-2021-03-18-team-02-dev
+        # Specify the path or URL to the Azure Resource Manager template.
+        template: 'ARM Temaplate.json'
+        # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
+        deploymentMode: Incremental
+        # Specifies the name of the resource group deployment to create.
+        # deploymentName: 
+        # Supply deployment parameter values.
+        parameters: |
+          resourceLocation=southeastasia 
+          tenantGuid=ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039
+          appServicePlanName=team2-arm-default
+          keyVaultName=animal-vault-default
+          webAppName=team2-app-default
+          resourceGroupServicePrincipalManagedApplicationObjectId=5f94f1f9-b182-4866-924c-cfbc17528b35
 
