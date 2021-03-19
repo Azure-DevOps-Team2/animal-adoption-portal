@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+   key_vault_name: animal-vault-default
+   web_app_name: team2-app-default
+   
 jobs:
   build:
 
@@ -99,15 +103,15 @@ jobs:
           resourceLocation=southeastasia 
           tenantGuid=ab5eb3d0-6067-40ee-b4c0-a2ce05dbf039
           appServicePlanName=team2-arm-default
-          keyVaultName=animal-vault-default
-          webAppName=team2-app-default
+          keyVaultName=${{env.key_vault_name}}
+          webAppName=${{env.web_app_name}}
           resourceGroupServicePrincipalManagedApplicationObjectId=5f94f1f9-b182-4866-924c-cfbc17528b35
           
     - name: Azure WebApp
       uses: Azure/webapps-deploy@v2
       with:
         # Name of the Azure Web App
-        app-name: team2-app01
+        app-name: ${{env.web_app_name}}
         # Applies to Web Apps(Windows and Linux) and Web App Containers(linux). Multi container scenario not supported. Publish profile (*.publishsettings) file contents with Web Deploy secrets
         # publish-profile: ${{ secrets.PUBLISH_PROFILE }}
         # Enter an existing Slot other than the Production slot
@@ -118,7 +122,7 @@ jobs:
       uses: Azure/get-keyvault-secrets@v1
       with:
         # Name of the azure key vault
-        keyvault: animal-vault-default
+        keyvault: ${{env.key_vault_name}}
         # Name of the secret to be fetched
         secrets: GlobalPassword
         
@@ -126,7 +130,7 @@ jobs:
       uses: Azure/appservice-settings@v1
       with:
         # Name of the Azure Web App
-        app-name: team2-app01
+        app-name: ${{env.web_app_name}}
         # Name of an existing slot other than the production slot. Default value is production
         app-settings-json: '[ { "name": "GlobalPassword", "value": "${{env.GlobalPassword}}", "slotSetting": true } ]'
         
