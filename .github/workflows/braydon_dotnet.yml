@@ -50,8 +50,7 @@ jobs:
       with:
     # Artifact name
         name: ARM-template
-        path: 
-          ARM Temaplate.json
+        path: ARMTemplate.json
   # Set these variables at either the step or workflow level
  
   release:
@@ -75,7 +74,7 @@ jobs:
         # Artifact name
         name: ARM-template
         # Destination path
-        path: /arm
+        #path:
         
     - uses: azure/login@v1
       with:
@@ -90,7 +89,7 @@ jobs:
         # Provide the name of a resource group, only required for resource Group deployments.
         resourceGroupName: DevOps-2021-03-18-team-02-dev
         # Specify the path or URL to the Azure Resource Manager template.
-        template: ./arm/ARM Temaplate.json
+        template: ./ARMTemplate.json
         # Incremental (only add resources to resource group) or Complete (remove extra resources from resource group) or Validate (only validates the template).
         deploymentMode: Incremental
         # Specifies the name of the resource group deployment to create.
